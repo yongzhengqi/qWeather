@@ -2,7 +2,8 @@
 a python project to get real time weather information
 
 # How to use
-You just need to type the name of the city which you want to know its weather
+1. Donwload qWeather.py and city_code.py
+2. Click qWeather.py and enter the name of the city which you want to know its weather
 
 ps: Only support citys in china
 
