@@ -9,6 +9,7 @@ ps: Only support citys in china
 
 # How it works
 The programe get data from "weather.com.cn"
+
 And process it with python
 
 # Aspects to improve
