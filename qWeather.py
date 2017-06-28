@@ -50,9 +50,19 @@ class Main(QWidget):
             MessageBox.setText("数据库中没有查找到您居住的城市")
             MessageBox.setWindowTitle("Warning")
             MessageBox.exec_()
-        else:
+            return
+
+        try:
             WeatherStatus = GetWeatherStatus(CityCode["中心城区"])
-            self.WeatherStatusOutput.setText(WeatherStatus)
+        except:
+            MessageBox = QMessageBox()
+            MessageBox.setIcon(QMessageBox.Warning)
+            MessageBox.setText("网络异常")
+            MessageBox.setWindowTitle("Warning")
+            MessageBox.exec_()
+            return
+
+        self.WeatherStatusOutput.setText(WeatherStatus)
 
 
 if __name__ == '__main__':
