@@ -11,10 +11,6 @@ The programe get data from "weather.com.cn"
 
 And process it with python
 
-# New in Version 2.0
-1. Add GUI
-2. fix small bugs
-
 # things to be done
 1. use .csv to store data
 2. use mysql to store data
