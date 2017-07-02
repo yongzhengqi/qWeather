@@ -19,6 +19,8 @@ class Main(QWidget):
 
         QueryBotton = QPushButton("查询")
         QueryBotton.clicked.connect(self.query)
+        IPBotton = QPushButton("通过IP地址获取地理位置")
+        IPBotton.clicked.connect(self.IPQuery)
 
         grid = QGridLayout()
         grid.setSpacing(10)
@@ -29,7 +31,8 @@ class Main(QWidget):
         grid.addWidget(WeatherStatus, 2, 1)
         grid.addWidget(self.WeatherStatusOutput, 2, 2)
 
-        grid.addWidget(QueryBotton, 3, 1, 1, 2)
+        grid.addWidget(QueryBotton, 3, 1)
+        grid.addWidget(IPBotton, 3, 2)
 
         self.setLayout(grid)
 
@@ -39,30 +42,39 @@ class Main(QWidget):
         self.show()
 
     def query(self):
+        self.WeatherStatusOutput.setText("")
         CityName = self.CityNmaeInput.text()
         translator = CityCodeTranslator()
 
         try:
             CityCode = translator.GetCityCode(CityName)
         except:
-            MessageBox = QMessageBox()
-            MessageBox.setIcon(QMessageBox.Warning)
-            MessageBox.setText("数据库中没有查找到您居住的城市")
-            MessageBox.setWindowTitle("Warning")
-            MessageBox.exec_()
+            RaiseWarnings("数据库中没有查找到您居住的城市")
             return
 
         try:
             WeatherStatus = GetWeatherStatus(CityCode["中心城区"])
         except:
-            MessageBox = QMessageBox()
-            MessageBox.setIcon(QMessageBox.Warning)
-            MessageBox.setText("网络异常")
-            MessageBox.setWindowTitle("Warning")
-            MessageBox.exec_()
+            RaiseWarnings("网络异常")
             return
 
         self.WeatherStatusOutput.setText(WeatherStatus)
+
+    def IPQuery(self):
+        try:
+            ip = GetLocationFromIPAddress()
+        except:
+            RaiseWarnings("获取IP地址失败")
+            return
+
+        try:
+            import json
+
+            content = json.loads(URLRequest("http://freeapi.ipip.net/%s" % ip))
+            self.CityNmaeInput.setText(content[2])
+            self.query()
+        except:
+            RaiseWarnings("查询地理位置失败")
 
 
 if __name__ == '__main__':

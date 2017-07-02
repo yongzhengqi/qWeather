@@ -29,13 +29,33 @@ class CityCodeTranslator:
                     return self.CityCode[province][city]
         raise Exception("找不到您居住的城市")
 
-def GetWeatherStatus(code):
+
+def URLRequest(url):
     import urllib.request
-    url = "http://www.weather.com.cn/data/cityinfo/%d.html" % code
 
-    json_content = urllib.request.urlopen(url).read()
+    content = urllib.request.urlopen(url).read()
+    return content.decode("utf-8")
 
+
+def GetWeatherStatus(code):
     import json
-    final_result = json.loads(json_content)
-    final_result = final_result["weatherinfo"]
-    return "%s\n%s ~ %s\n" % (final_result["weather"], final_result["temp1"], final_result["temp2"])
+
+    WeatherStatus = json.loads(URLRequest("http://www.weather.com.cn/data/cityinfo/%d.html" % code))
+    WeatherStatus = WeatherStatus["weatherinfo"]
+    return "%s\n%s ~ %s\n" % (WeatherStatus["weather"], WeatherStatus["temp1"], WeatherStatus["temp2"])
+
+
+def GetLocationFromIPAddress():
+    content = URLRequest("http://txt.go.sohu.com/ip/soip")
+    import re
+    ip = re.findall(r"\d+.\d+.\d+.\d+", content)
+    return ip[0]
+
+
+def RaiseWarnings(info):
+    from PyQt5.QtWidgets import QMessageBox
+    MessageBox = QMessageBox()
+    MessageBox.setIcon(QMessageBox.Warning)
+    MessageBox.setText(info)
+    MessageBox.setWindowTitle("Warning")
+    MessageBox.exec_()
