@@ -76,7 +76,6 @@ class Main(QWidget):
         except:
             RaiseWarnings("查询地理位置失败")
 
-
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = Main()

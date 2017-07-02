@@ -1,9 +1,7 @@
 class CityCodeTranslator:
     def __init__(self):
-        # import city code from flies
         CityCodeData = open("CityCode.data", "r").readlines()
 
-        # transform data from string(CityCodeData) to dictionary(CityCode)
         self.CityCode = {}
         for CurrentLine in CityCodeData:
             CurrentLineWords = CurrentLine.split()
