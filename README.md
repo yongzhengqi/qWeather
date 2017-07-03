@@ -12,6 +12,4 @@ The programe get data from "weather.com.cn"
 And process it with python
 
 # things to be done
-1. use .csv to store data
-2. use mysql to store data
 3. improve UI
