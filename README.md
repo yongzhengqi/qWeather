@@ -12,4 +12,4 @@ The programe get data from "weather.com.cn"
 And process it with python
 
 # things to be done
-3. improve UI
+1. improve UI
