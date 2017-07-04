@@ -4,16 +4,84 @@ from PyQt5.QtGui import *
 from CoreCode import *
 
 
+class ClickSelection(QGridLayout):
+    def __init__(self, MaxColumn, boss):
+        super().__init__()
+        self.MaxColumn = MaxColumn
+        self.boss = boss
+
+    def clear(self):
+        while self.count():
+            self.takeAt(0).widget().setParent(None)
+
+    def ProxyResponse(self, province, city, item):
+        def response():
+            if province is None:
+                self.set(item)
+            elif city is None:
+                self.boss.CityNmaeInput.setText(item)
+                self.boss.query()
+                self.set()
+
+        return response
+
+    def set(self, province=None, city=None):
+        self.clear()
+
+        CurrentLevel = CityCodeTranslator().CityCode
+        if province is not None:
+            CurrentLevel = CurrentLevel[province]
+        if city is not None:
+            CurrentLevel = CurrentLevel[city]
+
+        CurrentRow = 1
+        CurrentColumn = 1
+        for item in CurrentLevel:
+            CurrentBotton = QPushButton(item)
+            CurrentBotton.clicked.connect(self.ProxyResponse(province, city, item))
+            self.addWidget(CurrentBotton, CurrentRow, CurrentColumn)
+
+            CurrentColumn += 1
+            if CurrentColumn > self.MaxColumn:
+                CurrentRow += 1
+                CurrentColumn = 1
+
+        CurrentBotton = QPushButton("返回上一级菜单")
+        CurrentBotton.clicked.connect(lambda: self.set())
+        self.addWidget(CurrentBotton, CurrentRow, CurrentColumn)
+
+
 class Main(QWidget):
     def __init__(self):
         super().__init__()
-        self.InitWidget()
-        self.InitGUI()
+        self.init()
 
-    def InitWidget(self):
-        self.city = QLabel("城市")
-        self.WeatherStatus = QLabel("天气状况")
-        self.region = QLabel("城区")
+    def init(self):
+        self.EnterInit()
+        self.ClickInit()
+
+        MainGrid = QGridLayout()
+        MainGrid.setSpacing(10)
+
+        MainGrid.addLayout(self.ClickGrid, 1, 1)
+        MainGrid.addLayout(self.EnterGrid, 2, 1)
+
+        self.setLayout(MainGrid)
+
+        self.setWindowTitle("qWeather")
+        self.setWindowIcon(QIcon("icon.png"))
+
+        self.show()
+
+    def ClickInit(self):
+        self.ClickGrid = ClickSelection(5, self)
+        self.ClickGrid.set()
+
+    def EnterInit(self):
+        # init widget
+        CityLabel = QLabel("城市")
+        WeatherStatusLabel = QLabel("天气状况")
+        RegionLabel = QLabel("城区")
 
         self.CityNmaeInput = QLineEdit()
         self.CityNmaeInput.returnPressed.connect(self.query)
@@ -24,33 +92,26 @@ class Main(QWidget):
         self.RegionSelection = QComboBox()
         self.RegionSelection.activated.connect(self.ChooseRegion)
 
-        self.QueryBotton = QPushButton("查询")
-        self.QueryBotton.clicked.connect(self.query)
-        self.IPBotton = QPushButton("通过IP地址获取地理位置")
-        self.IPBotton.clicked.connect(self.IPQuery)
+        QueryBotton = QPushButton("查询")
+        QueryBotton.clicked.connect(self.query)
+        IPBotton = QPushButton("通过IP地址获取地理位置")
+        IPBotton.clicked.connect(self.IPQuery)
 
-    def InitGUI(self):
-        grid = QGridLayout()
-        grid.setSpacing(10)
+        # init GUI
+        self.EnterGrid = QGridLayout()
+        self.EnterGrid.setSpacing(10)
 
-        grid.addWidget(self.city, 1, 1)
-        grid.addWidget(self.CityNmaeInput, 1, 2)
+        self.EnterGrid.addWidget(CityLabel, 1, 1)
+        self.EnterGrid.addWidget(self.CityNmaeInput, 1, 2)
 
-        grid.addWidget(self.region, 2, 1)
-        grid.addWidget(self.RegionSelection, 2, 2)
+        self.EnterGrid.addWidget(RegionLabel, 2, 1)
+        self.EnterGrid.addWidget(self.RegionSelection, 2, 2)
 
-        grid.addWidget(self.WeatherStatus, 3, 1)
-        grid.addWidget(self.WeatherStatusOutput, 3, 2)
+        self.EnterGrid.addWidget(WeatherStatusLabel, 3, 1)
+        self.EnterGrid.addWidget(self.WeatherStatusOutput, 3, 2)
 
-        grid.addWidget(self.QueryBotton, 4, 1)
-        grid.addWidget(self.IPBotton, 4, 2)
-
-        self.setLayout(grid)
-
-        self.setGeometry(300, 300, 300, 100)
-        self.setWindowTitle("qWeather")
-        self.setWindowIcon(QIcon("icon.png"))
-        self.show()
+        self.EnterGrid.addWidget(QueryBotton, 4, 1)
+        self.EnterGrid.addWidget(IPBotton, 4, 2)
 
     def ChooseRegion(self):
         self.WeatherStatusOutput.setText("")
@@ -110,5 +171,5 @@ class Main(QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = Main()
+    MainProg = Main()
     sys.exit(app.exec_())
