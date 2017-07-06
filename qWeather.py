@@ -37,18 +37,18 @@ class ClickSelection(QGridLayout):
         CurrentRow = 1
         CurrentColumn = 1
         for item in CurrentLevel:
-            CurrentBotton = QPushButton(item)
-            CurrentBotton.clicked.connect(self.ProxyResponse(province, city, item))
-            self.addWidget(CurrentBotton, CurrentRow, CurrentColumn)
+            Currentbutton = QPushButton(item)
+            Currentbutton.clicked.connect(self.ProxyResponse(province, city, item))
+            self.addWidget(Currentbutton, CurrentRow, CurrentColumn)
 
             CurrentColumn += 1
             if CurrentColumn > self.MaxColumn:
                 CurrentRow += 1
                 CurrentColumn = 1
-
-        CurrentBotton = QPushButton("返回上一级菜单")
-        CurrentBotton.clicked.connect(lambda: self.set())
-        self.addWidget(CurrentBotton, CurrentRow, CurrentColumn)
+        if province is not None:
+            Currentbutton = QPushButton("返回省级菜单")
+            Currentbutton.clicked.connect(lambda: self.set())
+            self.addWidget(Currentbutton, CurrentRow, CurrentColumn)
 
 
 class Main(QWidget):
@@ -92,10 +92,10 @@ class Main(QWidget):
         self.RegionSelection = QComboBox()
         self.RegionSelection.activated.connect(self.ChooseRegion)
 
-        QueryBotton = QPushButton("查询")
-        QueryBotton.clicked.connect(self.query)
-        IPBotton = QPushButton("通过IP地址获取地理位置")
-        IPBotton.clicked.connect(self.IPQuery)
+        Querybutton = QPushButton("查询")
+        Querybutton.clicked.connect(self.query)
+        IPbutton = QPushButton("通过IP地址获取地理位置")
+        IPbutton.clicked.connect(self.IPQuery)
 
         # init GUI
         self.EnterGrid = QGridLayout()
@@ -110,8 +110,8 @@ class Main(QWidget):
         self.EnterGrid.addWidget(WeatherStatusLabel, 3, 1)
         self.EnterGrid.addWidget(self.WeatherStatusOutput, 3, 2)
 
-        self.EnterGrid.addWidget(QueryBotton, 4, 1)
-        self.EnterGrid.addWidget(IPBotton, 4, 2)
+        self.EnterGrid.addWidget(Querybutton, 4, 1)
+        self.EnterGrid.addWidget(IPbutton, 4, 2)
 
     def ChooseRegion(self):
         self.WeatherStatusOutput.setText("")
