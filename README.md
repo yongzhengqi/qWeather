@@ -10,6 +10,3 @@ a python project to get real time weather information
 The programe get data from "weather.com.cn"
 
 And process it with python
-
-# things to be done
-1. improve UI
