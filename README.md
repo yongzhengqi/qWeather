@@ -11,5 +11,5 @@ The programe get data from "weather.com.cn"
 
 And process it with python
 
-# Stoped development
+# Stopped development
 This program will not be updated anymore
